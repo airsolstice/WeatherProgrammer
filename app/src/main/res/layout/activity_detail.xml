@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/frag_detail"
-        android:name="com.bignerdranch.android.weatherprogrammer.WeatherDetailFragment"
+        android:name="com.bignerdranch.android.weatherprogrammer.activity.detail.WeatherDetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>

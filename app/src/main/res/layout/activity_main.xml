@@ -4,11 +4,11 @@
     android:id="@+id/news_title_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activity.main.MainActivity">
 
     <fragment
         android:id="@+id/frag_list"
-        android:name="com.bignerdranch.android.weatherprogrammer.WeatherListFragment"
+        android:name="com.bignerdranch.android.weatherprogrammer.activity.main.WeatherListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

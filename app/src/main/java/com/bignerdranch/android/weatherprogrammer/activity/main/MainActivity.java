@@ -1,10 +1,12 @@
-package com.bignerdranch.android.weatherprogrammer;
+package com.bignerdranch.android.weatherprogrammer.activity.main;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.bignerdranch.android.weatherprogrammer.R;
 
 public class MainActivity extends AppCompatActivity {
 

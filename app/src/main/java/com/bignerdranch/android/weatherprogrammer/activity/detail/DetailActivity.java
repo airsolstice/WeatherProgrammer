@@ -1,14 +1,13 @@
-package com.bignerdranch.android.weatherprogrammer;
+package com.bignerdranch.android.weatherprogrammer.activity.detail;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+
+import com.bignerdranch.android.weatherprogrammer.R;
+import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -20,12 +19,12 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         Intent intent = getIntent();
-        Weather weather = (Weather) intent.getSerializableExtra(WEATHER_KEY);
+        OpenWeatherMapForecastList weather = (OpenWeatherMapForecastList) intent.getSerializableExtra(WEATHER_KEY);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frag_detail);
         ((WeatherDetailFragment) fragment).refresh(weather);
     }
 
-    public static void start(Context context, Weather weather) {
+    public static void start(Context context, OpenWeatherMapForecastList weather) {
         Intent intent = new Intent();
         intent.setClass(context, DetailActivity.class);
         intent.putExtra(WEATHER_KEY, weather);

@@ -1,4 +1,4 @@
-package com.bignerdranch.android.weatherprogrammer;
+package com.bignerdranch.android.weatherprogrammer.activity.detail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.bignerdranch.android.weatherprogrammer.R;
+import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 
 public class WeatherDetailFragment extends Fragment {
 
@@ -19,7 +22,7 @@ public class WeatherDetailFragment extends Fragment {
         return view;
     }
 
-    public void refresh(Weather weather) {
+    public void refresh(OpenWeatherMapForecastList weather) {
         TextView tv = view.findViewById(R.id.txt);
         tv.setText(weather.toString());
     }
