@@ -1,4 +1,4 @@
-package com.bignerdranch.android.weatherprogrammer;
+package com.bignerdranch.android.weatherprogrammer.model;
 
 import java.io.Serializable;
 

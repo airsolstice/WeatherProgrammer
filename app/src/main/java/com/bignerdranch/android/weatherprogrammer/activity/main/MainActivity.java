@@ -1,5 +1,6 @@
 package com.bignerdranch.android.weatherprogrammer.activity.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -7,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bignerdranch.android.weatherprogrammer.R;
+import com.bignerdranch.android.weatherprogrammer.activity.LocationOptionActivity;
+import com.bignerdranch.android.weatherprogrammer.activity.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,10 +28,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
-            case R.id.option_location:
+            case R.id.my_location:
+
                 return true;
             case R.id.option_settings:
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

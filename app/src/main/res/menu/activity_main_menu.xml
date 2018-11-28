@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/option_location"
+    <item android:id="@+id/my_location"
         android:icon="@mipmap/ic_launcher"
         android:title="My Location"
         app:showAsAction="never"/>

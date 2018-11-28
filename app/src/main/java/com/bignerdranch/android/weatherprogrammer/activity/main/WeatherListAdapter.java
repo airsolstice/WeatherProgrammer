@@ -4,7 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.bignerdranch.android.weatherprogrammer.Weather;
+import com.bignerdranch.android.weatherprogrammer.model.Weather;
 
 import java.util.List;
 

@@ -14,6 +14,22 @@ public class WeatherProgrammerApplication extends Application {
 
     public static RequestQueue requestQueue;
 
+    public static String FILE_LOCATION_OPTION = "settings";
+    public static final String DISPLAY_WORD = "current city is :";
+
+    public static final String KEY_CITY_NAME = "city_name";
+    public static final String DEFINE_CITY_NAME = "Changsha";
+
+    public static final String KEY_CITY_ID = "city_code";
+    public static final String DEFINE_CITY_ID = "1815286";
+
+    public static final String KEY_TEMPERATURE_UTILS = "city_code";
+    public static final int DEFINE_TEMPERATURE_UTILS = 1;
+
+    public static final String KEY_NOTIFICATIONS = "city_code";
+    public static final boolean DEFINE_NOTIFICATION = false;
+
+
     @Override
     public void onCreate() {
         super.onCreate();
