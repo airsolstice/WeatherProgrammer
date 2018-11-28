@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -83,6 +84,24 @@ public class WeatherListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DetailActivity.start(getActivity(), data.get(position));
+            }
+        });
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //解决swipeRefreshLayout 和嵌套在LinearLayout中的ListView滑动冲突事件
+                boolean enable = false;
+                if (view.getChildCount() >0){
+                    boolean firstItemVisible = view.getFirstVisiblePosition() == 0;
+                    boolean topOfFirstItemVisible = view.getChildAt(0).getTop() == 0;
+                    enable = firstItemVisible && topOfFirstItemVisible;
+                }
+                swipeRefreshLayout.setEnabled(enable);
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
             }
         });
 
