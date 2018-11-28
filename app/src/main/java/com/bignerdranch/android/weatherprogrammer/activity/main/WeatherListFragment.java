@@ -1,6 +1,6 @@
 package com.bignerdranch.android.weatherprogrammer.activity.main;
 
-import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,22 +10,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.bignerdranch.android.weatherprogrammer.R;
-import com.bignerdranch.android.weatherprogrammer.Weather;
+import com.bignerdranch.android.weatherprogrammer.WeatherProgrammerApplication;
 import com.bignerdranch.android.weatherprogrammer.activity.detail.DetailActivity;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapForecast;
+import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapWeather;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapRequestUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WeatherListFragment extends Fragment {
 
@@ -34,6 +41,16 @@ public class WeatherListFragment extends Fragment {
      * 是否为双页模式
      */
     private boolean isDoublePage;
+
+    private TextView tvTime;
+
+    private TextView tvTempMax;
+
+    private TextView tvTempMin;
+
+    private ImageView ivIcon;
+
+    private TextView tvMain;
 
     /**
      * 列表适配器
@@ -48,6 +65,11 @@ public class WeatherListFragment extends Fragment {
      * 下拉刷新控件
      */
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    /**
+     * 多个控件空间使用同一加载控件，保存在加载中的而数据
+     */
+    private AtomicInteger loadingCount = new AtomicInteger(0);
 
     @Nullable
     @Override
@@ -68,48 +90,115 @@ public class WeatherListFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refreshCurrentData();
                 refreshList();
             }
         });
+
+        tvTime = view.findViewById(R.id.time);
+        tvTempMax = view.findViewById(R.id.temp_max);
+        tvTempMin = view.findViewById(R.id.temp_min);
+        ivIcon = view.findViewById(R.id.icon);
+        tvMain = view.findViewById(R.id.main);
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        refreshCurrentData();
         refreshList();
     }
 
-    /**
-     * 刷新列表数据
-     */
-    public void refreshList(){
+    private void refreshCurrentData(){
         if (!swipeRefreshLayout.isRefreshing()){
             swipeRefreshLayout.setRefreshing(true);
         }
         Map<String,String> params = new HashMap<>();
-        params.put("id","524901");
+        params.put("id","1815286");
         params.put("units","metric");
-        OpenWeatherMapRequestUtil.openWeatherMapRequest(OpenWeatherMapRequestUtil.OpenWeatherMapRequestType.FORECAST, params,
-                OpenWeatherMapForecast.class, new Response.Listener<OpenWeatherMapForecast>() {
+        OpenWeatherMapRequestUtil.openWeatherMapRequest(OpenWeatherMapRequestUtil.OpenWeatherMapRequestType.WEATHER, params,
+                OpenWeatherMapWeather.class, new Response.Listener<OpenWeatherMapWeather>() {
                     @Override
-                    public void onResponse(OpenWeatherMapForecast response) {
-                        data.clear();
-                        data.addAll(response.getList());
-                        adapter.notifyDataSetChanged();
-                        if (swipeRefreshLayout.isRefreshing()){
+                    public void onResponse(OpenWeatherMapWeather response) {
+                        int i = loadingCount.decrementAndGet();
+                        setCurrentData(response);
+                        if (i <= 0 && swipeRefreshLayout.isRefreshing()){
                             swipeRefreshLayout.setRefreshing(false);
                         }
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if (swipeRefreshLayout.isRefreshing()){
+                        int i = loadingCount.decrementAndGet();
+                        if (i <= 0 && swipeRefreshLayout.isRefreshing()){
                             swipeRefreshLayout.setRefreshing(false);
                         }
-                        Toast.makeText(getContext(), "数据加载失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "当前天气数据加载失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+        loadingCount.incrementAndGet();
+    }
+
+    /**
+     * 重新设置当前天气数据
+     * @param weather
+     */
+    private void setCurrentData(OpenWeatherMapWeather weather){
+        String timeStr = new SimpleDateFormat("E,MMM dd").format(new Date());
+        tvTime.setText(timeStr);
+        tvTempMax.setText(weather.getMain().getTempMax());
+        tvTempMin.setText(weather.getMain().getTempMin());
+        com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather openWeatherMapWeather = weather.getWeather().get(0);
+        tvMain.setText(openWeatherMapWeather.getMain());
+        ImageRequest imageRequest = new ImageRequest(OpenWeatherMapRequestUtil.OPEN_WEATHER_MAP_ICON_URL + openWeatherMapWeather.getIcon() + ".png", new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                ivIcon.setImageBitmap(response);
+            }
+        }, 200, 200, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ivIcon.setImageResource(R.mipmap.ic_launcher);
+            }
+        });
+        WeatherProgrammerApplication.getHttpQueues().add(imageRequest);
+    }
+
+    /**
+     * 刷新列表数据
+     */
+    private void refreshList(){
+        if (!swipeRefreshLayout.isRefreshing()){
+            swipeRefreshLayout.setRefreshing(true);
+        }
+        Map<String,String> params = new HashMap<>();
+        params.put("id","1815286");
+        params.put("units","metric");
+        OpenWeatherMapRequestUtil.openWeatherMapRequest(OpenWeatherMapRequestUtil.OpenWeatherMapRequestType.FORECAST, params,
+                OpenWeatherMapForecast.class, new Response.Listener<OpenWeatherMapForecast>() {
+                    @Override
+                    public void onResponse(OpenWeatherMapForecast response) {
+                        int i = loadingCount.decrementAndGet();
+                        data.clear();
+                        data.addAll(response.getList());
+                        adapter.notifyDataSetChanged();
+                        if (i <= 0 && swipeRefreshLayout.isRefreshing()){
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        int i = loadingCount.decrementAndGet();
+                        if (i <= 0 && swipeRefreshLayout.isRefreshing()){
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                        Toast.makeText(getContext(), "5天天气数据加载失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        loadingCount.incrementAndGet();
     }
 
     @Override
