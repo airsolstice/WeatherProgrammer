@@ -2,7 +2,6 @@ package com.bignerdranch.android.weatherprogrammer.activity.main;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.bignerdranch.android.weatherprogrammer.R;
-import com.bignerdranch.android.weatherprogrammer.WeatherProgrammerApplication;
+import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapRequestUtil;
@@ -36,7 +35,7 @@ public class OpenWeatherMapForecastListAdapter extends BaseAdapter {
     private List<OpenWeatherMapForecastList> data;
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private SimpleDateFormat format2 = new SimpleDateFormat("E HH时");
+    private SimpleDateFormat format2 = new SimpleDateFormat("E HH:mm");
 
     public OpenWeatherMapForecastListAdapter(Context context,List<OpenWeatherMapForecastList> data){
         this.context = context;
@@ -92,7 +91,7 @@ public class OpenWeatherMapForecastListAdapter extends BaseAdapter {
                 icon.setImageResource(R.mipmap.ic_launcher);
             }
         });
-        WeatherProgrammerApplication.getHttpQueues().add(imageRequest);
+        WeatherApplication.getHttpQueues().add(imageRequest);
         TextView time = viewHolder.getTime();
         String timeText = itemData.getDt_txt();
         try {

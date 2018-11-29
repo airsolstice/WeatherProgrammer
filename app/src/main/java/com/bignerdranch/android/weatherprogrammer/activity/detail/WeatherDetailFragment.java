@@ -14,7 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.bignerdranch.android.weatherprogrammer.R;
-import com.bignerdranch.android.weatherprogrammer.WeatherProgrammerApplication;
+import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapRequestUtil;
@@ -39,7 +39,7 @@ public class WeatherDetailFragment extends Fragment {
         String timeStr = weather.getDt_txt();
         try {
             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(timeStr);
-            timeStr = new SimpleDateFormat("HH 时,E\nMMM dd").format(date);
+            timeStr = new SimpleDateFormat("\nE, MMM dd").format(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -55,12 +55,12 @@ public class WeatherDetailFragment extends Fragment {
 
 
         TextView humidity = view.findViewById(R.id.humidity);
-        humidity.setText(weather.getMain().getHumidity() + "%");
+        humidity.setText("Humidity: "+weather.getMain().getHumidity() + "%");
         TextView pressure = view.findViewById(R.id.pressure);
-        pressure.setText(weather.getMain().getPressure() + "hPa");
+        pressure.setText("Pressure: "+weather.getMain().getPressure() + "hPa");
 
         TextView wind = view.findViewById(R.id.wind);
-        wind.setText(weather.getWind().getSpeed() + " m/s\t" + weather.getWind().getDeg()+"°");
+        wind.setText("Wind: " + weather.getWind().getSpeed() + " km/h SE");
 
 
 
@@ -76,7 +76,7 @@ public class WeatherDetailFragment extends Fragment {
                 icon.setImageResource(R.mipmap.ic_launcher);
             }
         });
-        WeatherProgrammerApplication.getHttpQueues().add(imageRequest);
+        WeatherApplication.getHttpQueues().add(imageRequest);
 
     }
 

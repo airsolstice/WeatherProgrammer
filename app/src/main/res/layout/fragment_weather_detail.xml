@@ -78,6 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
         android:text="Humidity:78%"
         android:textColor="@android:color/black"
         android:textSize="30dp" />
@@ -87,6 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
         android:text="Pressure:1018hPa"
         android:textColor="@android:color/black"
         android:textSize="30dp" />

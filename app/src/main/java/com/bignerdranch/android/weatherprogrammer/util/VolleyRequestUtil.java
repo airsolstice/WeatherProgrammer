@@ -5,11 +5,9 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.bignerdranch.android.weatherprogrammer.WeatherProgrammerApplication;
+import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -21,7 +19,7 @@ import java.util.Map;
  */
 public class VolleyRequestUtil {
 
-    private RequestQueue mRequestQueue = WeatherProgrammerApplication.requestQueue;
+    private RequestQueue mRequestQueue = WeatherApplication.requestQueue;
 
     /**
      *
@@ -58,7 +56,7 @@ public class VolleyRequestUtil {
                                        Object tag){
         //防止重复请求，所以先取消tag标识的请求队列
         if (null != tag){
-            WeatherProgrammerApplication.getHttpQueues().cancelAll(tag);
+            WeatherApplication.getHttpQueues().cancelAll(tag);
         }
         JsonRequest<T> jsonRequest = new JsonRequest<T>(method, url, requestBody, listener, errorListener) {
             @Override
@@ -92,7 +90,7 @@ public class VolleyRequestUtil {
         if (null != tag){
             jsonRequest.setTag(tag);
         }
-        WeatherProgrammerApplication.getHttpQueues().add(jsonRequest);
+        WeatherApplication.getHttpQueues().add(jsonRequest);
     }
 
     private VolleyRequestUtil(){}

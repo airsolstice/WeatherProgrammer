@@ -9,18 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bignerdranch.android.weatherprogrammer.R;
-import com.bignerdranch.android.weatherprogrammer.WeatherProgrammerApplication;
-import com.bignerdranch.android.weatherprogrammer.activity.main.OpenWeatherMapForecastListAdapter;
+import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapCity;
 
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LocationOptionActivity extends AppCompatActivity {
@@ -32,7 +29,27 @@ public class LocationOptionActivity extends AppCompatActivity {
     private ListView cityListView;
     private SharedPreferences sp = null;
 
-
+    private static final String countryData = "[{\"id\":1816670,\"name\":\"Beijing\",\"country\":\"CN\"},\n" +
+            "{\"id\":1796236,\"name\":\"Shanghai\",\"country\":\"CN\"},\n" +
+            "{\"id\":1792943,\"name\":\"Tianjin\",\"country\":\"CN\"},\n" +
+            "{\"id\":1795269,\"name\":\"Shijiazhuang\",\"country\":\"CN\"},\n" +
+            "{\"id\":1805754,\"name\":\"Jinan\",\"country\":\"CN\"},\n" +
+            "{\"id\":1787093,\"name\":\"Yantai\",\"country\":\"CN\"},\n" +
+            "{\"id\":1799963,\"name\":\"Nanjing\",\"country\":\"CN\"},\n" +
+            "{\"id\":1815286,\"name\":\"Chengdu\",\"country\":\"CN\"},\n" +
+            "{\"id\":1815577,\"name\":\"Changsha\",\"country\":\"CN\"},\n" +
+            "{\"id\":1804651,\"name\":\"Kunming\",\"country\":\"CN\"},\n" +
+            "{\"id\":1808926,\"name\":\"Hangzhou\",\"country\":\"CN\"},\n" +
+            "{\"id\":1790925,\"name\":\"Wuxi\",\"country\":\"CN\"},\n" +
+            "{\"id\":1791247,\"name\":\"Wuhan\",\"country\":\"CN\"},\n" +
+            "{\"id\":1808722,\"name\":\"Hefei\",\"country\":\"CN\"},\n" +
+            "{\"id\":1810821,\"name\":\"Fuzhou\",\"country\":\"CN\"},\n" +
+            "{\"id\":1790645,\"name\":\"Xiamen\",\"country\":\"CN\"},\n" +
+            "{\"id\":1809858,\"name\":\"Guangzhou\",\"country\":\"CN\"},\n" +
+            "{\"id\":1795565,\"name\":\"Shenzhen\",\"country\":\"CN\"},\n" +
+            "{\"id\":1809077,\"name\":\"Haikou\",\"country\":\"CN\"},\n" +
+            "{\"id\":1914723,\"name\":\"Sanya\",\"country\":\"CN\"},\n" +
+            "{\"id\":1914540,\"name\":\"Xianggang\",\"country\":\"CN\"}]";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +57,9 @@ public class LocationOptionActivity extends AppCompatActivity {
         cityTextView = findViewById(R.id.tv_city);
         cityListView = findViewById(R.id.lv_city_list);
 
-        sp = getSharedPreferences(WeatherProgrammerApplication.FILE_LOCATION_OPTION, 0);
-        cityName = sp.getString(WeatherProgrammerApplication.KEY_CITY_NAME, WeatherProgrammerApplication.DEFINE_CITY_NAME);
-        cityTextView.setText(WeatherProgrammerApplication.DISPLAY_WORD + cityName);
+        sp = getSharedPreferences(WeatherApplication.FILE_LOCATION_OPTION, 0);
+        cityName = sp.getString(WeatherApplication.KEY_CITY_NAME, WeatherApplication.DEFINE_CITY_NAME);
+        cityTextView.setText(WeatherApplication.DISPLAY_WORD + cityName);
 
         final List<OpenWeatherMapCity> data = getData();
         cityListView.setAdapter(new CityListAdapter(this, getData()));
@@ -53,24 +70,17 @@ public class LocationOptionActivity extends AppCompatActivity {
                 OpenWeatherMapCity city = data.get(position);
                 cityName = city.getName();
                 cityId = city.getId();
-                editor.putString(WeatherProgrammerApplication.KEY_CITY_NAME, cityName);
-                editor.putString(WeatherProgrammerApplication.KEY_CITY_ID, cityId);
+                editor.putString(WeatherApplication.KEY_CITY_NAME, cityName);
+                editor.putString(WeatherApplication.KEY_CITY_ID, cityId);
                 editor.commit();
-                cityTextView.setText(WeatherProgrammerApplication.DISPLAY_WORD + cityName);
+                cityTextView.setText(WeatherApplication.DISPLAY_WORD + cityName);
             }
         });
 
     }
 
     public List<OpenWeatherMapCity> getData() {
-        List<OpenWeatherMapCity> data = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            OpenWeatherMapCity city = new OpenWeatherMapCity();
-            city.setId(WeatherProgrammerApplication.DEFINE_CITY_ID);
-            city.setName(WeatherProgrammerApplication.DEFINE_CITY_NAME + i);
-            data.add(city);
-        }
-
+        List<OpenWeatherMapCity> data = JSON.parseArray(countryData, OpenWeatherMapCity.class);
         return data;
     }
 

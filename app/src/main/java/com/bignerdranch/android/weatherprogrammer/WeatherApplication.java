@@ -10,7 +10,7 @@ import com.android.volley.toolbox.Volley;
  * @Description 应用初始化
  * @date 2018/11/27
  */
-public class WeatherProgrammerApplication extends Application {
+public class WeatherApplication extends Application {
 
     public static RequestQueue requestQueue;
 
@@ -21,13 +21,13 @@ public class WeatherProgrammerApplication extends Application {
     public static final String DEFINE_CITY_NAME = "Changsha";
 
     public static final String KEY_CITY_ID = "city_code";
-    public static final String DEFINE_CITY_ID = "1815286";
+    public static final String DEFINE_CITY_ID = "1815577";
 
     public static final String KEY_TEMPERATURE_UTILS = "city_code";
-    public static final int DEFINE_TEMPERATURE_UTILS = 1;
+    public static final String DEFINE_TEMPERATURE_UTILS = "Metric";
 
     public static final String KEY_NOTIFICATIONS = "city_code";
-    public static final boolean DEFINE_NOTIFICATION = false;
+    public static final Boolean DEFINE_NOTIFICATION = false;
 
 
     @Override

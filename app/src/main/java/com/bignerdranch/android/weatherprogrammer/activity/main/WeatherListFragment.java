@@ -1,5 +1,6 @@
 package com.bignerdranch.android.weatherprogrammer.activity.main;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.bignerdranch.android.weatherprogrammer.R;
-import com.bignerdranch.android.weatherprogrammer.WeatherProgrammerApplication;
+import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.activity.detail.DetailActivity;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapForecast;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapWeather;
@@ -72,12 +73,15 @@ public class WeatherListFragment extends Fragment {
      */
     private AtomicInteger loadingCount = new AtomicInteger(0);
 
+    private SharedPreferences sp;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather_list, container, false);
 
         ListView lv = view.findViewById(R.id.lv_list);
+        sp = sp = getActivity().getSharedPreferences(WeatherApplication.FILE_LOCATION_OPTION, 0);
         adapter = new OpenWeatherMapForecastListAdapter(getContext(), data);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -135,8 +139,10 @@ public class WeatherListFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(true);
         }
         Map<String, String> params = new HashMap<>();
-        params.put("id", "1815286");
-        params.put("units", "metric");
+        String id = sp.getString(WeatherApplication.KEY_CITY_ID, WeatherApplication.DEFINE_CITY_ID);
+        String temperatureUtils = sp.getString(WeatherApplication.KEY_TEMPERATURE_UTILS, WeatherApplication.DEFINE_TEMPERATURE_UTILS);
+        params.put("id", id);
+        params.put("units", temperatureUtils);
         OpenWeatherMapRequestUtil.openWeatherMapRequest(OpenWeatherMapRequestUtil.OpenWeatherMapRequestType.WEATHER, params,
                 OpenWeatherMapWeather.class, new Response.Listener<OpenWeatherMapWeather>() {
                     @Override
@@ -183,7 +189,7 @@ public class WeatherListFragment extends Fragment {
                 ivIcon.setImageResource(R.mipmap.ic_launcher);
             }
         });
-        WeatherProgrammerApplication.getHttpQueues().add(imageRequest);
+        WeatherApplication.getHttpQueues().add(imageRequest);
     }
 
     /**
