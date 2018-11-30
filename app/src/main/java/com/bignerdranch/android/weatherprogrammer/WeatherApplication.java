@@ -27,7 +27,7 @@ public class WeatherApplication extends Application {
     public static final String KEY_OPEN_WATHER_MAP_UNIT = "open_weather_map_unit";
     public static final String DEFINE_TOPEN_WATHER_MAP_UNIT = OpenWeatherMapParamsUtil.OpenWeatherMapUnit.STANDARD.getValue();
 
-    public static final String KEY_NOTIFICATIONS = "city_code";
+    public static final String KEY_NOTIFICATIONS = "notifications_status";
     public static final Boolean DEFINE_NOTIFICATION = false;
 
 

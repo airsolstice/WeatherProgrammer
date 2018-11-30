@@ -6,8 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.bignerdranch.android.weatherprogrammer.R;
@@ -45,7 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
         sp = getSharedPreferences(WeatherApplication.FILE_LOCATION_OPTION, 0);
         cityName = sp.getString(WeatherApplication.KEY_CITY_NAME, WeatherApplication.DEFINE_CITY_NAME);
         temperatureUtils = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
-        //notification = sp.getBoolean(WeatherApplication.KEY_NOTIFICATIONS , WeatherApplication.DEFINE_NOTIFICATION);
+        notification = sp.getBoolean(WeatherApplication.KEY_NOTIFICATIONS , WeatherApplication.DEFINE_NOTIFICATION);
 
         locationTextView = findViewById(R.id.tv_location);
         locationTextView.setText(cityName);
@@ -92,12 +96,32 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.btn_notifications).setOnClickListener(new View.OnClickListener() {
+        AppCompatCheckBox checkBox = findViewById(R.id.cb_notifications);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean(WeatherApplication.KEY_NOTIFICATIONS, isChecked);
+                notificationsTextView.setText(isChecked? "Enable" : "Disable");
+                editor.commit();
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

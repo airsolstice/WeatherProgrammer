@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">WeatherProgrammer</string>
     <string name="title_activity_content">Details</string>
+    <string name="title_activity_setting">Settings</string>
     <string name="default_time">--, --- --</string>
     <string name="default_string">--</string>
 </resources>

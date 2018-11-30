@@ -28,7 +28,8 @@
             android:name=".activity.detail.DetailActivity"
             android:label="@string/title_activity_content" />
         <activity android:name=".activity.LocationOptionActivity" />
-        <activity android:name=".activity.SettingsActivity"></activity>
+        <activity android:name=".activity.SettingsActivity"
+            android:label="@string/title_activity_setting"></activity>
     </application>
 
 </manifest>
