@@ -27,6 +27,7 @@ import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeathe
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapWeather;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapCity;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
+import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapRequestUtil;
 
 import java.text.SimpleDateFormat;
@@ -88,7 +89,7 @@ public class WeatherListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_weather_list, container, false);
 
         ListView lv = view.findViewById(R.id.lv_list);
-        sp = sp = getActivity().getSharedPreferences(WeatherApplication.FILE_LOCATION_OPTION, 0);
+        sp = getActivity().getSharedPreferences(WeatherApplication.FILE_LOCATION_OPTION, 0);
         adapter = new OpenWeatherMapForecastListAdapter(getContext(), data);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -147,9 +148,9 @@ public class WeatherListFragment extends Fragment {
         }
         Map<String, String> params = new HashMap<>();
         String id = sp.getString(WeatherApplication.KEY_CITY_ID, WeatherApplication.DEFINE_CITY_ID);
-        String temperatureUtils = sp.getString(WeatherApplication.KEY_TEMPERATURE_UTILS, WeatherApplication.DEFINE_TEMPERATURE_UTILS);
+        String openWeatherMapUnit = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
         params.put("id", id);
-        params.put("units", temperatureUtils);
+        params.put("units", openWeatherMapUnit);
         OpenWeatherMapRequestUtil.openWeatherMapRequest(OpenWeatherMapRequestUtil.OpenWeatherMapRequestType.WEATHER, params,
                 OpenWeatherMapWeather.class, new Response.Listener<OpenWeatherMapWeather>() {
                     @Override
@@ -181,8 +182,11 @@ public class WeatherListFragment extends Fragment {
     private void setCurrentData(OpenWeatherMapWeather weather) {
         String timeStr = new SimpleDateFormat("E,MMM dd").format(new Date());
         tvTime.setText(timeStr);
-        tvTempMax.setText(weather.getMain().getTempMax());
-        tvTempMin.setText(weather.getMain().getTempMin());
+
+        String openWeatherMapUnit = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
+        String tempUnit = OpenWeatherMapParamsUtil.tempUnitMap.get(openWeatherMapUnit);
+        tvTempMax.setText(weather.getMain().getTempMax() + tempUnit);
+        tvTempMin.setText(weather.getMain().getTempMin() + tempUnit);
         com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather openWeatherMapWeather = weather.getWeather().get(0);
         tvMain.setText(openWeatherMapWeather.getMain());
         ImageRequest imageRequest = new ImageRequest(OpenWeatherMapRequestUtil.OPEN_WEATHER_MAP_ICON_URL + openWeatherMapWeather.getIcon() + ".png", new Response.Listener<Bitmap>() {
@@ -207,8 +211,10 @@ public class WeatherListFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(true);
         }
         Map<String, String> params = new HashMap<>();
-        params.put("id", "1815286");
-        params.put("units", "metric");
+        String id = sp.getString(WeatherApplication.KEY_CITY_ID, WeatherApplication.DEFINE_CITY_ID);
+        String openWeatherMapUnit = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
+        params.put("id", id);
+        params.put("units", openWeatherMapUnit);
         OpenWeatherMapRequestUtil.openWeatherMapRequest(OpenWeatherMapRequestUtil.OpenWeatherMapRequestType.FORECAST, params,
                 OpenWeatherMapForecast.class, new Response.Listener<OpenWeatherMapForecast>() {
                     @Override

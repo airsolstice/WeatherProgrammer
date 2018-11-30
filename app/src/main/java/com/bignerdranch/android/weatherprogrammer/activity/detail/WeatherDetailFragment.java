@@ -1,5 +1,6 @@
 package com.bignerdranch.android.weatherprogrammer.activity.detail;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +18,9 @@ import com.bignerdranch.android.weatherprogrammer.R;
 import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather;
+import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapRequestUtil;
+import com.bignerdranch.android.weatherprogrammer.util.OwnUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,10 +29,13 @@ import java.util.Date;
 public class WeatherDetailFragment extends Fragment {
 
     private View view;
+    private SharedPreferences sp;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        sp = getActivity().getSharedPreferences(WeatherApplication.FILE_LOCATION_OPTION, 0);
         view = inflater.inflate(R.layout.fragment_weather_detail, container, false);
         return view;
     }
@@ -44,10 +50,14 @@ public class WeatherDetailFragment extends Fragment {
             e.printStackTrace();
         }
         time.setText(timeStr);
+
+        String openWeatherMapUnit = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
+        String tempUnit = OpenWeatherMapParamsUtil.tempUnitMap.get(openWeatherMapUnit);
+
         TextView tempMax = view.findViewById(R.id.temp_max);
-        tempMax.setText(weather.getMain().getTempMax()+"°");
+        tempMax.setText(weather.getMain().getTempMax()+ tempUnit);
         TextView tempMin = view.findViewById(R.id.temp_min);
-        tempMin.setText(weather.getMain().getTempMin()+"°");
+        tempMin.setText(weather.getMain().getTempMin()+ tempUnit);
 
         TextView main = view.findViewById(R.id.main);
         OpenWeatherMapWeather openWeatherMapWeather = weather.getWeather().get(0);
@@ -55,12 +65,14 @@ public class WeatherDetailFragment extends Fragment {
 
 
         TextView humidity = view.findViewById(R.id.humidity);
-        humidity.setText("Humidity: "+weather.getMain().getHumidity() + "%");
+        humidity.setText("Humidity: "+weather.getMain().getHumidity() + OpenWeatherMapParamsUtil.HUMIDITY_UNIT);
         TextView pressure = view.findViewById(R.id.pressure);
-        pressure.setText("Pressure: "+weather.getMain().getPressure() + "hPa");
+        pressure.setText("Pressure: "+weather.getMain().getPressure() + OpenWeatherMapParamsUtil.PRESSURE_UNIT);
 
         TextView wind = view.findViewById(R.id.wind);
-        wind.setText("Wind: " + weather.getWind().getSpeed() + " km/h SE");
+
+        wind.setText("Wind: " + weather.getWind().getSpeed() + " "+OpenWeatherMapParamsUtil.speedUnitMap.get(openWeatherMapUnit)+" "
+                + OwnUtil.changeAngleToDirection(weather.getWind().getDeg()));
 
 
 

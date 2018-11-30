@@ -41,7 +41,7 @@
                     android:id="@+id/temp_max"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#3F51B5"
+                    android:background="@color/colorPrimary"
                     android:text="@string/default_string"
                     android:textColor="@android:color/white"
                     android:textSize="45sp" />
@@ -50,7 +50,7 @@
                     android:id="@+id/temp_min"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#3F51B5"
+                    android:background="@color/colorPrimary"
                     android:text="@string/default_string"
                     android:textColor="@android:color/white"
                     android:textSize="30sp" />

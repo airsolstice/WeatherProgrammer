@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
 
 /**
  * @Package com.bignerdranch.android.weatherprogrammer
@@ -23,8 +24,8 @@ public class WeatherApplication extends Application {
     public static final String KEY_CITY_ID = "city_code";
     public static final String DEFINE_CITY_ID = "1815577";
 
-    public static final String KEY_TEMPERATURE_UTILS = "city_code";
-    public static final String DEFINE_TEMPERATURE_UTILS = "Metric";
+    public static final String KEY_OPEN_WATHER_MAP_UNIT = "open_weather_map_unit";
+    public static final String DEFINE_TOPEN_WATHER_MAP_UNIT = OpenWeatherMapParamsUtil.OpenWeatherMapUnit.STANDARD.getValue();
 
     public static final String KEY_NOTIFICATIONS = "city_code";
     public static final Boolean DEFINE_NOTIFICATION = false;

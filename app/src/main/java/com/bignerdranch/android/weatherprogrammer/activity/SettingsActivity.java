@@ -7,10 +7,15 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.bignerdranch.android.weatherprogrammer.R;
 import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
+import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -39,7 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         sp = getSharedPreferences(WeatherApplication.FILE_LOCATION_OPTION, 0);
         cityName = sp.getString(WeatherApplication.KEY_CITY_NAME, WeatherApplication.DEFINE_CITY_NAME);
-        temperatureUtils = sp.getString(WeatherApplication.KEY_TEMPERATURE_UTILS, WeatherApplication.DEFINE_TEMPERATURE_UTILS);
+        temperatureUtils = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
         //notification = sp.getBoolean(WeatherApplication.KEY_NOTIFICATIONS , WeatherApplication.DEFINE_NOTIFICATION);
 
         locationTextView = findViewById(R.id.tv_location);
@@ -59,17 +64,23 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        final String[] items = new String[] { "北京", "上海", "广州", "深圳" };
+        OpenWeatherMapParamsUtil.OpenWeatherMapUnit[] units = OpenWeatherMapParamsUtil.OpenWeatherMapUnit.values();
+        List<String> unitValues = new ArrayList<>();
+        for (OpenWeatherMapParamsUtil.OpenWeatherMapUnit unit : units) {
+            unitValues.add(unit.getValue());
+        }
+        final String[] items = unitValues.toArray(new String[0]);
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(R.mipmap.ic_launcher).setTitle("Utils")
+        builder.setIcon(R.mipmap.ic_launcher).setTitle("Units")
                 .setItems(items, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferences.Editor editor = sp.edit();
-                        String utils = items[which];
-                        editor.putString(WeatherApplication.KEY_TEMPERATURE_UTILS, utils);
-                        utilsTextView.setText(utils);
+                        String unit = items[which];
+                        editor.putString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, unit);
+                        utilsTextView.setText(unit);
                         editor.commit();
                     }
                 });
