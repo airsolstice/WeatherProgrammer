@@ -62,6 +62,11 @@ public class WeatherListFragment extends Fragment {
     private OpenWeatherMapForecastListAdapter adapter = null;
 
     /**
+     * 当前数据
+     */
+    private OpenWeatherMapWeather currentWeather;
+
+    /**
      * 列表查询结果
      */
     private OpenWeatherMapForecast forecast;
@@ -156,6 +161,7 @@ public class WeatherListFragment extends Fragment {
                     @Override
                     public void onResponse(OpenWeatherMapWeather response) {
                         int i = loadingCount.decrementAndGet();
+                        currentWeather = response;
                         setCurrentData(response);
                         if (i <= 0 && swipeRefreshLayout.isRefreshing()) {
                             swipeRefreshLayout.setRefreshing(false);
@@ -245,6 +251,10 @@ public class WeatherListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         isDoublePage = getActivity().findViewById(R.id.content_layout) != null;
+    }
+
+    public OpenWeatherMapWeather getCurrentWeather(){
+        return currentWeather;
     }
 
 }
