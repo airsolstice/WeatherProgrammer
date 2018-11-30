@@ -26,8 +26,7 @@
         </activity>
         <activity
             android:name=".activity.detail.DetailActivity"
-            android:label="@string/title_activity_content"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_content" />
         <activity android:name=".activity.LocationOptionActivity" />
         <activity android:name=".activity.SettingsActivity"></activity>
     </application>

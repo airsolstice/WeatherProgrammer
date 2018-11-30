@@ -25,6 +25,7 @@ import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.activity.detail.DetailActivity;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapForecast;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapWeather;
+import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapCity;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapRequestUtil;
 
@@ -58,6 +59,12 @@ public class WeatherListFragment extends Fragment {
      * 列表适配器
      */
     private OpenWeatherMapForecastListAdapter adapter = null;
+
+    /**
+     * 列表查询结果
+     */
+    private OpenWeatherMapForecast forecast;
+
     /**
      * 主页数据
      */
@@ -87,7 +94,7 @@ public class WeatherListFragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DetailActivity.start(getActivity(), data.get(position));
+                DetailActivity.start(getActivity(), forecast.getCity(),data.get(position));
             }
         });
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -186,7 +193,7 @@ public class WeatherListFragment extends Fragment {
         }, 200, 200, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                ivIcon.setImageResource(R.mipmap.ic_launcher);
+                ivIcon.setImageResource(R.mipmap.icon_error);
             }
         });
         WeatherApplication.getHttpQueues().add(imageRequest);
@@ -207,6 +214,7 @@ public class WeatherListFragment extends Fragment {
                     @Override
                     public void onResponse(OpenWeatherMapForecast response) {
                         int i = loadingCount.decrementAndGet();
+                        forecast = response;
                         data.clear();
                         data.addAll(response.getList());
                         adapter.notifyDataSetChanged();

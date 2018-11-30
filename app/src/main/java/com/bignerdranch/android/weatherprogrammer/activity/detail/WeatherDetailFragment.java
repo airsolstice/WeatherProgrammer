@@ -73,7 +73,7 @@ public class WeatherDetailFragment extends Fragment {
         }, 200, 200, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                icon.setImageResource(R.mipmap.ic_launcher);
+                icon.setImageResource(R.mipmap.icon_error);
             }
         });
         WeatherApplication.getHttpQueues().add(imageRequest);
