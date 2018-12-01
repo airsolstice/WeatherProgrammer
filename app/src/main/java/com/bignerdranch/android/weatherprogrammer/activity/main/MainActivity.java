@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.my_location:
-                // TODO定位界面跳转
+                // TODO 定位界面跳转
                 WeatherListFragment weatherListFragment = (WeatherListFragment) getSupportFragmentManager().findFragmentById(R.id.frag_list);
                 OpenWeatherMapWeather currentWeather = weatherListFragment.getCurrentWeather();
                 if (null != currentWeather){
