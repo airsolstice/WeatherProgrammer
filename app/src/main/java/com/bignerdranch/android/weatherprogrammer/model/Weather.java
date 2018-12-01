@@ -4,11 +4,29 @@ import java.io.Serializable;
 
 public class Weather implements Serializable {
 
+    /**
+     * 日期
+     */
     private String date;
+    /**
+     * 星期
+     */
     private String week;
+    /**
+     * 天气状态
+     */
     private String status;
+    /**
+     * 天气图标id
+     */
     private int icon;
+    /**
+     * 最高温度
+     */
     private String highersTemperature;
+    /**
+     * 最低温度
+     */
     private String lowestTemperature;
 
     public String getDate() {

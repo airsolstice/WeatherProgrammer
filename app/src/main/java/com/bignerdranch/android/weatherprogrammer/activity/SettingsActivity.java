@@ -10,7 +10,6 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
@@ -22,6 +21,12 @@ import com.bignerdranch.android.weatherprogrammer.service.WeatherNotifyService;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @Description 设置页面
+ *
+ * @Package com.bignerdranch.android.weatherprogrammer.activity
+ * @date 2018/11/28
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     private TextView locationTextView ;

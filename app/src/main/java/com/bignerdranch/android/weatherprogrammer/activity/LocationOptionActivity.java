@@ -20,15 +20,38 @@ import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenW
 
 import java.util.List;
 
+/**
+ * @Description 城市地点选择页面
+ *
+ * @Package com.bignerdranch.android.weatherprogrammer.activity
+ * @date 2018/11/28
+ */
 public class LocationOptionActivity extends AppCompatActivity {
 
-
+    /**
+     * 城市显示
+     */
     private TextView cityTextView;
+    /**
+     * 城市名字
+     */
     private String cityName;
+    /**
+     * 城市id
+     */
     private String cityId;
+    /**
+     * 城市列表
+     */
     private ListView cityListView;
+    /**
+     * 持久化存储引用
+     */
     private SharedPreferences sp = null;
-
+    /**
+     * 文本json数据，取自open weather api，由于文件过大不能加载到apk中，因此取样部分数据
+     * 如有需要需要手动抓取数据
+     */
     private static final String countryData = "[{\"id\":1816670,\"name\":\"Beijing\",\"country\":\"CN\"},\n" +
             "{\"id\":1796236,\"name\":\"Shanghai\",\"country\":\"CN\"},\n" +
             "{\"id\":1792943,\"name\":\"Tianjin\",\"country\":\"CN\"},\n" +
@@ -50,6 +73,7 @@ public class LocationOptionActivity extends AppCompatActivity {
             "{\"id\":1809077,\"name\":\"Haikou\",\"country\":\"CN\"},\n" +
             "{\"id\":1914723,\"name\":\"Sanya\",\"country\":\"CN\"},\n" +
             "{\"id\":1914540,\"name\":\"Xianggang\",\"country\":\"CN\"}]";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,17 +103,31 @@ public class LocationOptionActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 获取城市数据
+     */
     public List<OpenWeatherMapCity> getData() {
         List<OpenWeatherMapCity> data = JSON.parseArray(countryData, OpenWeatherMapCity.class);
         return data;
     }
 
-
+    /**
+     * 城市列表适配器
+     */
     private class CityListAdapter extends BaseAdapter {
 
+        /**
+         * 城市列表数据
+         */
         private List<OpenWeatherMapCity> data;
+        /**
+         * Activity上下文
+         */
         private Context context;
 
+        /**
+         * 构造器
+         */
         public CityListAdapter(Context context, List<OpenWeatherMapCity> data) {
             this.context = context;
             this.data = data;
@@ -113,9 +151,9 @@ public class LocationOptionActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            View view = null;
-
-            TextView holder = null;
+            View view;
+            // item复用优化，提高效率
+            TextView holder;
             if (null != convertView) {
                 view = convertView;
                 holder = (TextView) view.getTag();
@@ -130,5 +168,4 @@ public class LocationOptionActivity extends AppCompatActivity {
             return view;
         }
     }
-
 }

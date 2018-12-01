@@ -7,8 +7,9 @@ import com.android.volley.toolbox.Volley;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
 
 /**
- * @Package com.bignerdranch.android.weatherprogrammer
  * @Description 应用初始化
+ *
+ * @Package com.bignerdranch.android.weatherprogrammer
  * @date 2018/11/27
  */
 public class WeatherApplication extends Application {
@@ -30,6 +31,9 @@ public class WeatherApplication extends Application {
     public static final String KEY_NOTIFICATIONS = "notifications_status";
     public static final Boolean DEFINE_NOTIFICATION = false;
 
+
+    public static final  String WEATHER_KEY = "weather";
+    public static final  String CITY_KEY = "city";
 
     @Override
     public void onCreate() {

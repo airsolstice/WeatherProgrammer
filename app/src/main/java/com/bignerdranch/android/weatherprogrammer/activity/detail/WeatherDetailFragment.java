@@ -28,9 +28,14 @@ import java.util.Date;
 
 public class WeatherDetailFragment extends Fragment {
 
+    /**
+     * fragment视图
+     */
     private View view;
+    /**
+     * 持久化存储引用
+     */
     private SharedPreferences sp;
-
 
     @Nullable
     @Override
@@ -40,6 +45,9 @@ public class WeatherDetailFragment extends Fragment {
         return view;
     }
 
+    /**
+     * 刷新内容
+     */
     public void refresh(OpenWeatherMapForecastList weather) {
         TextView time = view.findViewById(R.id.time);
         String timeStr = weather.getDt_txt();
@@ -74,8 +82,6 @@ public class WeatherDetailFragment extends Fragment {
         wind.setText("Wind: " + weather.getWind().getSpeed() + " "+OpenWeatherMapParamsUtil.speedUnitMap.get(openWeatherMapUnit)+" "
                 + OwnUtil.changeAngleToDirection(weather.getWind().getDeg()));
 
-
-
         final ImageView icon = view.findViewById(R.id.icon);
         ImageRequest imageRequest = new ImageRequest(OpenWeatherMapRequestUtil.OPEN_WEATHER_MAP_ICON_URL + openWeatherMapWeather.getIcon() + ".png", new Response.Listener<Bitmap>() {
             @Override
@@ -89,7 +95,5 @@ public class WeatherDetailFragment extends Fragment {
             }
         });
         WeatherApplication.getHttpQueues().add(imageRequest);
-
     }
-
 }

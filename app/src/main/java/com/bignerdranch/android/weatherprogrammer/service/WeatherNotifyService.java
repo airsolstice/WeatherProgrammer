@@ -24,8 +24,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * @Package com.bignerdranch.android.weatherprogrammer.service
  * @Description 天气通知service
+ *
+ * @Package com.bignerdranch.android.weatherprogrammer.service
  * @date 2018/12/1
  */
 public class WeatherNotifyService extends Service {

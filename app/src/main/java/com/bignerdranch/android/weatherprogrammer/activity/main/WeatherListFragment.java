@@ -44,47 +44,53 @@ public class WeatherListFragment extends Fragment {
      * 是否为双页模式
      */
     private boolean isDoublePage;
-
-    private TextView tvTime;
-
-    private TextView tvTempMax;
-
-    private TextView tvTempMin;
-
-    private ImageView ivIcon;
-
-    private TextView tvMain;
-
+    /**
+     * 显示时间
+     */
+    private TextView timeTextView;
+    /**
+     * 显示最高温度
+     */
+    private TextView maxTemperatureTextView;
+    /**
+     * 显示最低温度
+     */
+    private TextView minTemperatureTextView;
+    /**
+     * 天气图标
+     */
+    private ImageView weatherIconImageView;
+    /**
+     * 天气状态
+     */
+    private TextView weatherStatusTextView;
     /**
      * 列表适配器
      */
-    private OpenWeatherMapForecastListAdapter adapter = null;
-
+    private WeatherListAdapter adapter = null;
     /**
      * 当前数据
      */
     private OpenWeatherMapWeather currentWeather;
-
     /**
      * 列表查询结果
      */
     private OpenWeatherMapForecast forecast;
-
     /**
      * 主页数据
      */
     private List<OpenWeatherMapForecastList> data = new ArrayList<>();
-
     /**
      * 下拉刷新控件
      */
     private SwipeRefreshLayout swipeRefreshLayout;
-
     /**
      * 多个控件空间使用同一加载控件，保存在加载中的而数据
      */
     private AtomicInteger loadingCount = new AtomicInteger(0);
-
+    /**
+     * 持久化存储引用
+     */
     private SharedPreferences sp;
 
     @Nullable
@@ -94,7 +100,7 @@ public class WeatherListFragment extends Fragment {
 
         ListView lv = view.findViewById(R.id.lv_list);
         sp = getActivity().getSharedPreferences(WeatherApplication.FILE_LOCATION_OPTION, 0);
-        adapter = new OpenWeatherMapForecastListAdapter(getContext(), data);
+        adapter = new WeatherListAdapter(getContext(), data);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -102,6 +108,7 @@ public class WeatherListFragment extends Fragment {
                 DetailActivity.start(getActivity(), forecast.getCity(),data.get(position));
             }
         });
+        // 设置滑动监听
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -130,11 +137,11 @@ public class WeatherListFragment extends Fragment {
             }
         });
 
-        tvTime = view.findViewById(R.id.time);
-        tvTempMax = view.findViewById(R.id.temp_max);
-        tvTempMin = view.findViewById(R.id.temp_min);
-        ivIcon = view.findViewById(R.id.icon);
-        tvMain = view.findViewById(R.id.main);
+        timeTextView = view.findViewById(R.id.time);
+        maxTemperatureTextView = view.findViewById(R.id.temp_max);
+        minTemperatureTextView = view.findViewById(R.id.temp_min);
+        weatherIconImageView = view.findViewById(R.id.icon);
+        weatherStatusTextView = view.findViewById(R.id.main);
 
         return view;
     }
@@ -142,10 +149,14 @@ public class WeatherListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // 从其他页面跳回此页面时，刷新数据
         refreshCurrentData();
         refreshList();
     }
 
+    /**
+     * 获取当前数据
+     */
     private void refreshCurrentData() {
         if (!swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(true);
@@ -182,26 +193,24 @@ public class WeatherListFragment extends Fragment {
 
     /**
      * 重新设置当前天气数据
-     *
-     * @param weather
      */
     private void setCurrentData(OpenWeatherMapWeather weather,String tempUnit) {
         String timeStr = new SimpleDateFormat("E,MMM dd").format(new Date());
-        tvTime.setText(timeStr);
+        timeTextView.setText(timeStr);
 
-        tvTempMax.setText(weather.getMain().getTempMax() + tempUnit);
-        tvTempMin.setText(weather.getMain().getTempMin() + tempUnit);
+        maxTemperatureTextView.setText(weather.getMain().getTempMax() + tempUnit);
+        minTemperatureTextView.setText(weather.getMain().getTempMin() + tempUnit);
         com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather openWeatherMapWeather = weather.getWeather().get(0);
-        tvMain.setText(openWeatherMapWeather.getMain());
+        weatherStatusTextView.setText(openWeatherMapWeather.getMain());
         ImageRequest imageRequest = new ImageRequest(OpenWeatherMapRequestUtil.OPEN_WEATHER_MAP_ICON_URL + openWeatherMapWeather.getIcon() + ".png", new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
-                ivIcon.setImageBitmap(response);
+                weatherIconImageView.setImageBitmap(response);
             }
         }, 200, 200, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                ivIcon.setImageResource(R.mipmap.icon_error);
+                weatherIconImageView.setImageResource(R.mipmap.icon_error);
             }
         });
         WeatherApplication.getHttpQueues().add(imageRequest);
@@ -247,6 +256,9 @@ public class WeatherListFragment extends Fragment {
         loadingCount.incrementAndGet();
     }
 
+    /**
+     * 适配平板的双页面情况
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

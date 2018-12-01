@@ -14,6 +14,12 @@ import com.bignerdranch.android.weatherprogrammer.activity.SettingsActivity;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapWeather;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapCoord;
 
+/**
+ * @Description 主界面业务逻辑
+ *
+ * @Package com.bignerdranch.android.weatherprogrammer.activity.main
+ * @date 2018/11/28
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -34,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.my_location:
+                // TODO定位界面跳转
                 WeatherListFragment weatherListFragment = (WeatherListFragment) getSupportFragmentManager().findFragmentById(R.id.frag_list);
                 OpenWeatherMapWeather currentWeather = weatherListFragment.getCurrentWeather();
                 if (null != currentWeather){
@@ -42,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
                     Intent mIntent = new Intent(Intent.ACTION_VIEW, mUri);
                     startActivity(mIntent);
                 }else{
-                    Toast.makeText(this, "没有获取到位置", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "cant noy get current location.", Toast.LENGTH_SHORT).show();
                 }
                 return true;
+
             case R.id.option_settings:
+                // 设置界面跳转
                 intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;

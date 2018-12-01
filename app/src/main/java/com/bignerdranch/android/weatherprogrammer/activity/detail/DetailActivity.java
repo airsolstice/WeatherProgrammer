@@ -11,16 +11,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bignerdranch.android.weatherprogrammer.R;
+import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapCity;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather;
 
 import java.io.File;
 
+/**
+ * @Description 详情页业务
+ *
+ * @Package com.bignerdranch.android.weatherprogrammer.activity.detail
+ * @date 2018/11/28
+ */
 public class DetailActivity extends AppCompatActivity {
-
-    private static final  String WEATHER_KEY = "weather";
-    private static final  String CITY_KEY = "city";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         Intent intent = getIntent();
-        OpenWeatherMapForecastList weather = (OpenWeatherMapForecastList) intent.getSerializableExtra(WEATHER_KEY);
+        OpenWeatherMapForecastList weather = (OpenWeatherMapForecastList) intent.getSerializableExtra(WeatherApplication.WEATHER_KEY);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frag_detail);
         ((WeatherDetailFragment) fragment).refresh(weather);
     }
@@ -60,8 +64,8 @@ public class DetailActivity extends AppCompatActivity {
      */
     public String getWeatherDesc(){
         Intent activityIntent = getIntent();
-        OpenWeatherMapCity city = (OpenWeatherMapCity) activityIntent.getSerializableExtra(CITY_KEY);
-        OpenWeatherMapForecastList weather = (OpenWeatherMapForecastList) activityIntent.getSerializableExtra(WEATHER_KEY);
+        OpenWeatherMapCity city = (OpenWeatherMapCity) activityIntent.getSerializableExtra(WeatherApplication.CITY_KEY);
+        OpenWeatherMapForecastList weather = (OpenWeatherMapForecastList) activityIntent.getSerializableExtra(WeatherApplication.WEATHER_KEY);
         OpenWeatherMapWeather openWeatherMapWeather = weather.getWeather().get(0);
         return weather.getDt_txt() + "\ncity:" + city.getName() +
                 "\nweather:" + openWeatherMapWeather.getDescription() +
@@ -77,8 +81,8 @@ public class DetailActivity extends AppCompatActivity {
     public static void start(Context context, OpenWeatherMapCity city,OpenWeatherMapForecastList weather) {
         Intent intent = new Intent();
         intent.setClass(context, DetailActivity.class);
-        intent.putExtra(WEATHER_KEY, weather);
-        intent.putExtra(CITY_KEY, city);
+        intent.putExtra(WeatherApplication.WEATHER_KEY, weather);
+        intent.putExtra(WeatherApplication.CITY_KEY, city);
         context.startActivity(intent);
     }
 
