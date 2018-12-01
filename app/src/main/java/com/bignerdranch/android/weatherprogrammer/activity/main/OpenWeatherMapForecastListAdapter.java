@@ -1,7 +1,6 @@
 package com.bignerdranch.android.weatherprogrammer.activity.main;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.bignerdranch.android.weatherprogrammer.R;
 import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather;
-import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapRequestUtil;
 
 import java.text.ParseException;
@@ -35,15 +33,19 @@ public class OpenWeatherMapForecastListAdapter extends BaseAdapter {
     private Context context;
 
     private List<OpenWeatherMapForecastList> data;
-    private SharedPreferences sp;
+
+    private String tempUnit;
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat format2 = new SimpleDateFormat("E HH:mm");
 
-    public OpenWeatherMapForecastListAdapter(Context context,List<OpenWeatherMapForecastList> data){
+    public OpenWeatherMapForecastListAdapter(Context context, List<OpenWeatherMapForecastList> data){
         this.context = context;
         this.data = data;
-        sp = context.getSharedPreferences(WeatherApplication.FILE_LOCATION_OPTION, 0);
+    }
+
+    public void setTempUnit(String tempUnit) {
+        this.tempUnit = tempUnit;
     }
 
     @Override
@@ -107,9 +109,6 @@ public class OpenWeatherMapForecastListAdapter extends BaseAdapter {
         time.setText(timeText);
         TextView weather = viewHolder.getWeather();
         weather.setText(openWeatherMapWeather.getMain());
-
-        String openWeatherMapUnit = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
-        String tempUnit = OpenWeatherMapParamsUtil.tempUnitMap.get(openWeatherMapUnit);
 
         TextView tempMax = viewHolder.getTempMax();
         tempMax.setText(itemData.getMain().getTempMax()+tempUnit);

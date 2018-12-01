@@ -30,6 +30,8 @@
         <activity android:name=".activity.LocationOptionActivity" />
         <activity android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_setting"></activity>
+
+        <service android:name=".service.WeatherNotifyService" />
     </application>
 
 </manifest>

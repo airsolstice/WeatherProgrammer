@@ -25,7 +25,6 @@ import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.activity.detail.DetailActivity;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapForecast;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeatherMapWeather;
-import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapCity;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapRequestUtil;
@@ -154,6 +153,7 @@ public class WeatherListFragment extends Fragment {
         Map<String, String> params = new HashMap<>();
         String id = sp.getString(WeatherApplication.KEY_CITY_ID, WeatherApplication.DEFINE_CITY_ID);
         String openWeatherMapUnit = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
+        final String tempUnit = OpenWeatherMapParamsUtil.tempUnitMap.get(openWeatherMapUnit);
         params.put("id", id);
         params.put("units", openWeatherMapUnit);
         OpenWeatherMapRequestUtil.openWeatherMapRequest(OpenWeatherMapRequestUtil.OpenWeatherMapRequestType.WEATHER, params,
@@ -162,7 +162,7 @@ public class WeatherListFragment extends Fragment {
                     public void onResponse(OpenWeatherMapWeather response) {
                         int i = loadingCount.decrementAndGet();
                         currentWeather = response;
-                        setCurrentData(response);
+                        setCurrentData(response,tempUnit);
                         if (i <= 0 && swipeRefreshLayout.isRefreshing()) {
                             swipeRefreshLayout.setRefreshing(false);
                         }
@@ -185,12 +185,10 @@ public class WeatherListFragment extends Fragment {
      *
      * @param weather
      */
-    private void setCurrentData(OpenWeatherMapWeather weather) {
+    private void setCurrentData(OpenWeatherMapWeather weather,String tempUnit) {
         String timeStr = new SimpleDateFormat("E,MMM dd").format(new Date());
         tvTime.setText(timeStr);
 
-        String openWeatherMapUnit = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
-        String tempUnit = OpenWeatherMapParamsUtil.tempUnitMap.get(openWeatherMapUnit);
         tvTempMax.setText(weather.getMain().getTempMax() + tempUnit);
         tvTempMin.setText(weather.getMain().getTempMin() + tempUnit);
         com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather openWeatherMapWeather = weather.getWeather().get(0);
@@ -219,6 +217,7 @@ public class WeatherListFragment extends Fragment {
         Map<String, String> params = new HashMap<>();
         String id = sp.getString(WeatherApplication.KEY_CITY_ID, WeatherApplication.DEFINE_CITY_ID);
         String openWeatherMapUnit = sp.getString(WeatherApplication.KEY_OPEN_WATHER_MAP_UNIT, WeatherApplication.DEFINE_TOPEN_WATHER_MAP_UNIT);
+        final String tempUnit = OpenWeatherMapParamsUtil.tempUnitMap.get(openWeatherMapUnit);
         params.put("id", id);
         params.put("units", openWeatherMapUnit);
         OpenWeatherMapRequestUtil.openWeatherMapRequest(OpenWeatherMapRequestUtil.OpenWeatherMapRequestType.FORECAST, params,
@@ -229,6 +228,7 @@ public class WeatherListFragment extends Fragment {
                         forecast = response;
                         data.clear();
                         data.addAll(response.getList());
+                        adapter.setTempUnit(tempUnit);
                         adapter.notifyDataSetChanged();
                         if (i <= 0 && swipeRefreshLayout.isRefreshing()) {
                             swipeRefreshLayout.setRefreshing(false);

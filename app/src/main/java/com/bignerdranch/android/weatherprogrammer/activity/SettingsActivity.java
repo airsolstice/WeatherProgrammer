@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bignerdranch.android.weatherprogrammer.R;
 import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
+import com.bignerdranch.android.weatherprogrammer.service.WeatherNotifyService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         notificationsTextView = findViewById(R.id.tv_notifications);
         notificationsTextView.setText(notification? "Enable" : "Disable");
+
         final Intent intent = new Intent(this, LocationOptionActivity.class);
 
         findViewById(R.id.btn_location).setOnClickListener(new View.OnClickListener() {
@@ -97,6 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         AppCompatCheckBox checkBox = findViewById(R.id.cb_notifications);
+        checkBox.setChecked(notification);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -123,5 +126,17 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        //判断是否改变通知状态
+        boolean notification = sp.getBoolean(WeatherApplication.KEY_NOTIFICATIONS , WeatherApplication.DEFINE_NOTIFICATION);
+        if (this.notification != notification){
+            Intent intent = new Intent(this, WeatherNotifyService.class);
+            startService(intent);
+        }
+
+        super.onDestroy();
     }
 }
