@@ -1,7 +1,5 @@
 package com.bignerdranch.android.weatherprogrammer.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.math.BigDecimal;
 
 /**
@@ -18,7 +16,7 @@ public class OwnUtil {
      * 将角度转换成方向
      */
     public static String changeAngleToDirection(String angle){
-        if (StringUtils.isNotEmpty(angle)){
+        if (null != angle && !"".equals(angle)){
             return changeAngleToDirection(new BigDecimal(angle));
         }
         return null;

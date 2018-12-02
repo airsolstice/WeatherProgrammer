@@ -28,6 +28,4 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.alibaba:fastjson:1.2.53'
     implementation 'com.mcxiaoke.volley:library:1.0.19'
-    implementation 'org.apache.commons:commons-lang3:3.8.1'
-    implementation 'org.apache.commons:commons-collections4:4.1'
 }

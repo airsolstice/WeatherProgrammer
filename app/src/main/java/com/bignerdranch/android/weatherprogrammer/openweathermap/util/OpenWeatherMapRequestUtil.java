@@ -4,12 +4,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.bignerdranch.android.weatherprogrammer.util.VolleyRequestUtil;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -47,13 +43,12 @@ public class OpenWeatherMapRequestUtil {
     public static <T> void openWeatherMapRequest(OpenWeatherMapRequestType type,Map<String,String> params,Class<T> cls,Response.Listener<T> listener,Response.ErrorListener errorListener){
         StringBuilder url = new StringBuilder(OPEN_WEATHER_MAP_URL+type.getReq()+"?APPID="+openWeatherMapApiKey);
 
-        List<String> tagList = new ArrayList<>();
-
+        StringBuilder tag = new StringBuilder();
         if (null != params && params.size() > 0){
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)) {
+                if (null != key && !"".equals(key) && null != value && !"".equals(value)) {
                     try {
                         value = URLEncoder.encode(value, "utf-8");
                     } catch (UnsupportedEncodingException e) {
@@ -61,17 +56,18 @@ public class OpenWeatherMapRequestUtil {
                     }
                     url.append("&").append(key).append("=").append(value);
                     if (type.getTagKeys().contains(key)) {
-                        tagList.add(key + "-" + value);
+                        tag.append(key).append("-").append(value);
                     }
                 }
             }
         }
-        String tag = null;
-        if (CollectionUtils.isNotEmpty(tagList)){
-            tag = "OPEN_WEATHER_MAP"+StringUtils.join(tagList);
+        String tagStr = tag.toString();
+        if ("".equals(tagStr)){
+            tagStr = "OPEN_WEATHER_MAP" + tagStr;
+
         }
 
-        VolleyRequestUtil.beanRequest(Request.Method.GET,url.toString(),cls, listener,errorListener,tag);
+        VolleyRequestUtil.beanRequest(Request.Method.GET,url.toString(),cls, listener,errorListener, tag.toString());
     }
 
     /**
