@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.bignerdranch.android.weatherprogrammer.R;
 import com.bignerdranch.android.weatherprogrammer.WeatherApplication;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
-import com.bignerdranch.android.weatherprogrammer.service.WeatherNotifyService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,11 +135,11 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         //判断是否改变通知状态
-        boolean notification = sp.getBoolean(WeatherApplication.KEY_NOTIFICATIONS , WeatherApplication.DEFINE_NOTIFICATION);
-        if (this.notification != notification){
-            Intent intent = new Intent(this, WeatherNotifyService.class);
-            startService(intent);
-        }
+//        boolean notification = sp.getBoolean(WeatherApplication.KEY_NOTIFICATIONS , WeatherApplication.DEFINE_NOTIFICATION);
+//        if (this.notification != notification){
+//            Intent intent = new Intent(this, WeatherNotifyService.class);
+//            startService(intent);
+//        }
 
         super.onDestroy();
     }

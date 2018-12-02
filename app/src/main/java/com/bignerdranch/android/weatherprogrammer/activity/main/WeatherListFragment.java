@@ -1,5 +1,6 @@
 package com.bignerdranch.android.weatherprogrammer.activity.main;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.OpenWeathe
 import com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapForecastList;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapParamsUtil;
 import com.bignerdranch.android.weatherprogrammer.openweathermap.util.OpenWeatherMapRequestUtil;
+import com.bignerdranch.android.weatherprogrammer.service.WeatherNotifyService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -202,18 +204,21 @@ public class WeatherListFragment extends Fragment {
         minTemperatureTextView.setText(weather.getMain().getTempMin() + tempUnit);
         com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather openWeatherMapWeather = weather.getWeather().get(0);
         weatherStatusTextView.setText(openWeatherMapWeather.getMain());
+
         ImageRequest imageRequest = new ImageRequest(OpenWeatherMapRequestUtil.OPEN_WEATHER_MAP_ICON_URL + openWeatherMapWeather.getIcon() + ".png", new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
                 weatherIconImageView.setImageBitmap(response);
             }
-        }, 200, 200, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
+        }, 0, 0, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 weatherIconImageView.setImageResource(R.mipmap.icon_error);
             }
         });
         WeatherApplication.getHttpQueues().add(imageRequest);
+        Intent intent = new Intent(getActivity(), WeatherNotifyService.class);
+        getActivity().startService(intent);
     }
 
     /**

@@ -1,13 +1,17 @@
 package com.bignerdranch.android.weatherprogrammer.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.widget.ImageView;
 
 import com.android.volley.Response;
@@ -36,6 +40,19 @@ public class WeatherNotifyService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel("1", "my_channel_01", NotificationManager.IMPORTANCE_DEFAULT);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(mChannel);
+        }
     }
 
     @Override
@@ -87,12 +104,12 @@ public class WeatherNotifyService extends Service {
                             public void onResponse(OpenWeatherMapWeather response) {
                                 com.bignerdranch.android.weatherprogrammer.openweathermap.bean.base.OpenWeatherMapWeather openWeatherMapWeather = response.getWeather().get(0);
                                 final NotificationManager mn = (NotificationManager)context.getSystemService(NOTIFICATION_SERVICE);
-                                final Notification.Builder builder = new Notification.Builder(context);
+                                final NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"1");
                                 builder.setSmallIcon(R.mipmap.ic_launcher);
                                 // 设置通知图标
                                 builder.setTicker("weather"); // 测试通知栏标题
                                 builder.setContentText(openWeatherMapWeather.getMain()); // 下拉通知啦内容
-                                builder.setContentTitle("标题");// 下拉通知栏标题
+                                builder.setContentTitle(response.getName());// 下拉通知栏标题
                                 builder.setAutoCancel(true);// 点击弹出的通知后,让通知将自动取消
                                 builder.setVibrate(new long[] { 0, 2000, 1000, 4000 }); // 震动需要真机测试-延迟0秒震动2秒延迟1秒震动4秒
                                 // builder.setSound(Uri.withAppendedPath(Audio.Media.INTERNAL_CONTENT_URI,
@@ -106,7 +123,6 @@ public class WeatherNotifyService extends Service {
                                     public void onResponse(Bitmap response) {
                                         builder.setLargeIcon(response);
                                         Notification notification = builder.build();
-                                        notification.flags = Notification.FLAG_INSISTENT;// 声音无限循环
                                         mn.notify((int) System.currentTimeMillis(), notification);
                                     }
                                 }, 200, 200, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
